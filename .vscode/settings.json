@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/803673f4-b07c-4377-8007-1d9ca8b2cfa1/resourceGroups/krmt-loadtesting-webapp/providers/Microsoft.Web/sites/krmt-stopwatch-timer",
+    "appService.deploySubpath": "."
+}
