@@ -5,27 +5,34 @@ const App: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
-  const start = () => {
-    if (isRunning) return;
+  const startOrPause = () => {
+    if (isRunning && intervalId) {
+      clearInterval(intervalId);
+      setIsRunning(false);
+    } else {
+      setIsRunning(true);
+      const id = setInterval(() => {
+        setTime(prevTime => prevTime + 1);
+      }, 1);
 
-    setIsRunning(true);
-    const id = setInterval(() => {
-      setTime(prevTime => prevTime + 1);
-    }, 1);
-
-    setIntervalId(id);
+      setIntervalId(id);
+    }
   };
 
   const pause = () => {
-    if (!isRunning) return;
+    if (!isRunning || !intervalId) return;
 
+    clearInterval(intervalId);
     setIsRunning(false);
-    if (intervalId) clearInterval(intervalId);
   };
 
   const clear = () => {
-    pause();
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
     setTime(0);
+    setIsRunning(false);
   };
 
   useEffect(() => {
@@ -40,7 +47,7 @@ const App: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-6xl mb-4 text-7xl">{displayTime}</h1>
       <div>
-        <button className="px-4 py-2 mr-2 bg-blue-500 text-white hover:bg-blue-700 rounded-full" onClick={start}>Start</button>
+        <button className="px-4 py-2 mr-2 bg-blue-500 text-white hover:bg-blue-700 rounded-full" onClick={startOrPause}>{isRunning ? "Pause" : "Start"}</button>
         <button className="px-4 py-2 mr-2 bg-yellow-500 text-white hover:bg-yellow-700 rounded-full" onClick={pause}>Pause</button>
         <button className="px-4 py-2 bg-red-500 text-white hover:bg-red-700 rounded-full" onClick={clear}>Clear</button>
       </div>
